@@ -21,7 +21,9 @@
     "andThen",
     "currentURL",
     "currentPath",
-    "currentRouteName"
+    "currentRouteName",
+    "sinon",
+    "process"
   ],
   "node": false,
   "browser": false,
@@ -47,5 +49,6 @@
   "strict": false,
   "white": false,
   "eqnull": true,
-  "esnext": true
+  "esnext": true,
+  "expr": true
 }
