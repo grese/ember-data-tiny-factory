@@ -21,7 +21,7 @@ module.exports = {
             moduleImportsJS = "import ModelFactory from 'ember-data-tiny-model-factory';" + EOL,
             setupTeardownJS = "ModelFactory.setResolver(resolver);" + EOL,
             resolverSet = 'setResolver(resolver);' + EOL,
-            resolverImport;
+            resolverImport = "import resolver from './helpers/resolver';'" + EOL;
 
         if(framework === 'mocha'){
             moduleImportsJS += "import { beforeEach, afterEach } from 'mocha';" + EOL;
@@ -32,7 +32,6 @@ module.exports = {
                 "afterEach(function(){" + EOL +
                 "    ModelFactory.teardown();" + EOL +
                 "});" + EOL;
-            resolverImport = "import { setResolver } from 'ember-mocha';" + EOL;
         }else if(framework === 'qunit'){
             moduleImportsJS += "import QUnit from 'qunit';" + EOL;
             setupTeardownJS +=
@@ -42,11 +41,8 @@ module.exports = {
                 "QUnit.testDone(function(){" + EOL +
                 "    ModelFactory.teardown();" + EOL +
                 "});" + EOL;
-            resolverImport = "import { setResolver } from 'ember-qunit';" + EOL;
         }
-
-
-
+        console.log('Writing setup and teardown hooks to tests/test-helper.js');
         return this.insertIntoFile("tests/test-helper.js",
                 moduleImportsJS,
                 { before: resolverImport }).then(function(){
