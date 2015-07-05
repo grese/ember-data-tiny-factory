@@ -1,6 +1,24 @@
 /* globals module */
 var EOL = require('os').EOL;
 
+var buildConfigureJS = function(modulePrefix, framework){
+    var MODULE_IMPORTS;
+    if(framework === 'mocha'){
+        MODULE_IMPORTS = "import { factorySetup } from 'ember-data-tiny-factory/setup/mocha";
+    }else{
+        MODULE_IMPORTS = "import { factorySetup } from 'ember-data-tiny-factory/setup/qunit";
+    }
+    var CONFIG_SCRIPTS =
+        "factorySetup({" + EOL +
+        "    modulePrefix: '" + modulePrefix + "'," + EOL +
+        "    resolver: resolver" + EOL +
+        "});";
+    return {
+        MODULE_IMPORTS: MODULE_IMPORTS,
+        CONFIG_SCRIPTS: CONFIG_SCRIPTS
+    };
+};
+
 module.exports = {
     description: 'A simple model factory to help with creating actual ember-data models for use in your unit tests.',
     locals: function(options){
@@ -16,41 +34,17 @@ module.exports = {
         };
     },
     afterInstall: function(options){
-        var locals = this.locals(options),
-            framework = locals.testFramework,
-            moduleImportsJS = "import ModelFactory from 'ember-data-tiny-factory';" + EOL,
-            setupTeardownJS =
-                "ModelFactory.configure('" + locals.appModulePrefix + "');" + EOL +
-                "ModelFactory.setResolver(resolver);" + EOL,
-            resolverSet = 'setResolver(resolver);' + EOL,
-            resolverImport = "import resolver from './helpers/resolver';'" + EOL;
+        var blueprint = this,
+            locals = blueprint.locals(options),
+            helperJS = buildConfigureJS(locals.appModulePrefix, locals.testFramework),
+            helperFilename = 'tests/test-helper.js',
+            helperImportTarget = "import resolver from './helpers/resolver';" + EOL,
+            helperConfigTarget = "setResolver(resolver);" + EOL;
 
-        if(framework === 'mocha'){
-            moduleImportsJS += "import { beforeEach, afterEach } from 'mocha';" + EOL;
-            setupTeardownJS +=
-                "beforeEach(function(){" + EOL +
-                "    ModelFactory.setup();" + EOL +
-                "});" + EOL +
-                "afterEach(function(){" + EOL +
-                "    ModelFactory.teardown();" + EOL +
-                "});" + EOL;
-        }else if(framework === 'qunit'){
-            moduleImportsJS += "import QUnit from 'qunit';" + EOL;
-            setupTeardownJS +=
-                "QUnit.testStart(function(){" + EOL +
-                "    ModelFactory.setup();" + EOL +
-                "});" + EOL +
-                "QUnit.testDone(function(){" + EOL +
-                "    ModelFactory.teardown();" + EOL +
-                "});" + EOL;
-        }
-        console.log('Writing setup and teardown hooks to tests/test-helper.js');
-        return this.insertIntoFile("tests/test-helper.js",
-                moduleImportsJS,
-                { after: resolverImport }).then(function(){
-                return this.insertIntoFile("tests/test-helper.js",
-                    setupTeardownJS,
-                    { after: resolverSet });
-            }.bind(this));
+        console.log('Writing ModelFactory setup script to tests/test-helper.js ...');
+
+        return blueprint.insertIntoFile(helperFilename, helperJS.MODULE_IMPORTS, {after: helperImportTarget}).then(function(){
+            return blueprint.insertIntoFile(helperFilename, helperJS.CONFIG_SCRIPTS, {after: helperConfigTarget});
+        });
     }
 };

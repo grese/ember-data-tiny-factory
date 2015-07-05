@@ -1,0 +1,1 @@
+export { default } from 'ember-data-tiny-factory/ember-data-tiny-factories/tiny-factory';

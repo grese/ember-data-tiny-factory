@@ -164,15 +164,13 @@ var ModelFactory = Em.Object.extend({
 });
 
 modelFactory = ModelFactory.create();
+
 export default {
-    configure: function(options){
-        options = options || {};
-        modelFactory.setProperties({
-            modulePrefix: options.modulePrefix
-        });
-    },
     setResolver: function(resolver){
         modelFactory.set('resolver', resolver);
+    },
+    setModulePrefix: function(prefix){
+        modelFactory.set('modulePrefix', prefix);
     },
     setup: function(){
         if(!modelFactory.get('_isSetup')){
