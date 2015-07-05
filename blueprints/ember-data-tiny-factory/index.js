@@ -4,9 +4,9 @@ var EOL = require('os').EOL;
 var buildConfigureJS = function(modulePrefix, framework){
     var MODULE_IMPORTS;
     if(framework === 'mocha'){
-        MODULE_IMPORTS = "import { factorySetup } from 'ember-data-tiny-factory/setup/mocha";
+        MODULE_IMPORTS = "import { factorySetup } from 'ember-data-tiny-factory/setup/mocha';";
     }else{
-        MODULE_IMPORTS = "import { factorySetup } from 'ember-data-tiny-factory/setup/qunit";
+        MODULE_IMPORTS = "import { factorySetup } from 'ember-data-tiny-factory/setup/qunit';";
     }
     var CONFIG_SCRIPTS =
         "factorySetup({" + EOL +
