@@ -47,7 +47,7 @@ module.exports = {
         console.log('Writing setup and teardown hooks to tests/test-helper.js');
         return this.insertIntoFile("tests/test-helper.js",
                 moduleImportsJS,
-                { before: resolverImport }).then(function(){
+                { after: resolverImport }).then(function(){
                 return this.insertIntoFile("tests/test-helper.js",
                     setupTeardownJS,
                     { after: resolverSet });
