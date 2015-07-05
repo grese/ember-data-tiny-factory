@@ -1,4 +1,5 @@
 /* jshint expr:true */
+import Em from 'ember';
 import { expect } from 'chai';
 import { beforeEach } from 'mocha';
 import { describeModule, it } from 'ember-mocha';
@@ -10,9 +11,9 @@ describeModule('controller:test-controller', 'TestControllerController', {
     needs: ['model:post', 'model:comment']
 }, function() {
 
-    var thePost;
+    var thePost, theComments;
     beforeEach(function(){
-        var theComments = ModelFactory.createRecordList('comment', 5, [
+        theComments = ModelFactory.createRecordList('comment', 5, [
             {id: 1, comment: 'enlightening!', date: 1435934204},
             {id: 2, comment: 'mystifying!', date: 1435934224}
         ]);
@@ -26,6 +27,10 @@ describeModule('controller:test-controller', 'TestControllerController', {
 
     it('should be able to create a DS.Model from within beforeEach hook of a controller test.', function() {
         this.subject();
+        expect(thePost).to.be.an.instanceof(Post);
+        theComments.forEach(function(comment){
+            expect(comment).to.be.an.instanceof(Comment);
+        });
     });
 
     it('should be able to create a DS.Model from within each test.', function() {
