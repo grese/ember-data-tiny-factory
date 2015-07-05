@@ -1,5 +1,5 @@
 {
-  "name": "ember-data-tiny-model-factory",
+  "name": "ember-data-tiny-factory",
   "version": "0.0.1",
   "description": "The default blueprint for ember-cli addons.",
   "directories": {
@@ -11,7 +11,7 @@
     "build": "ember build",
     "test": "ember try:testall"
   },
-  "repository": "https://github.com/grese/ember-data-tiny-model-factory",
+  "repository": "https://github.com/grese/ember-data-tiny-factory",
   "engines": {
     "node": ">= 0.10.0"
   },

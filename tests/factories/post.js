@@ -1,5 +1,8 @@
-import ModelFactory from 'ember-data-tiny-model-factory';
+import ModelFactory from 'ember-data-tiny-factory';
 
 ModelFactory.define('post', {
-    default: {}
+    default: {
+        id: '20',
+        name: 'A very, very special factory post...'
+    }
 });

@@ -1,4 +1,4 @@
-
+/* global require */
 import Em from 'ember';
 import DS from 'ember-data';
 import { getContext } from 'ember-test-helpers';
@@ -10,6 +10,7 @@ var ModelFactory = Em.Object.extend({
     ctx: null,
     store: null,
     resolver: null,
+    modulePrefix: '',
     init: function(){
         this.setup();
     },
@@ -26,25 +27,39 @@ var ModelFactory = Em.Object.extend({
             factory.set('_modules', {});
         });
     },
+    defineTemplateMap: function(factoryName, templates){
+        this.set('_templates.' + factoryName, templates);
+    },
     createRecord: function(modelName, params){
-        params = params || {};
+        params = params || 'default';
         var factory = this,
             store = this.get('store'),
-            record = null;
+            record = null,
+            modelTemplate;
         if(store){
-            // Registers the model on the application container, and then creates the record...
+            if(typeof params === 'string'){
+                modelTemplate = this._lookupTemplate(modelName, params);
+            }else{
+                modelTemplate = params;
+            }
             factory._registerModel(modelName);
             Em.run(function(){
-                record = store.createRecord(modelName, params);
+                record = store.createRecord(modelName, modelTemplate);
             });
         }
         return record;
     },
-    createRecords: function(modelName, paramsList){
-        paramsList = paramsList || [];
-        var i, records = Em.A([]);
-        for(i = 0; i < paramsList.length; i++){
-            records.addObject(this.createRecord(modelName, paramsList[i]));
+    createRecordList: function(modelName, count, params){
+        var i, records = Em.A([]), templateKey, modelTemplate;
+        for(i = 0; i < count; i++){
+            if(typeof params === 'string'){
+                templateKey = params;
+            }else{
+                templateKey = params[i];
+            }
+            modelTemplate = this._lookupTemplate(modelName, templateKey);
+            modelTemplate.id = i;
+            records.addObject(this.createRecord(modelName, modelTemplate));
         }
         return records;
     },
@@ -60,6 +75,11 @@ var ModelFactory = Em.Object.extend({
             }
         }
     },
+    _lookupTemplate: function(modelName, templateKey){
+        templateKey = templateKey || 'default';
+        return this.get('_templates.' + modelName + '.' + templateKey) || {};
+    },
+    _templates: {},
     _modules: {},
     _initCtx: function(){
         // Set 'ctx' to context of current test...
@@ -77,8 +97,13 @@ var ModelFactory = Em.Object.extend({
             this.set('store', store);
         }
     },
+    _registerFactory: function(factoryName){
+        // Requires the factory if it does not already exist so it calls define(factoryName)...
+        if(!this.get('_templates.' + factoryName)){
+            require(this.get('modulePrefix') + '/tests/factories/' + factoryName);
+        }
+    },
     _registerDependency: function(type, name){
-
         // Registers a dependency for the test (DS.Transform or DS.Model)...
         var moduleName = type + ':' + name,
             resolver = this.get('resolver'),
@@ -100,7 +125,8 @@ var ModelFactory = Em.Object.extend({
 
         // If model class is not cached, register it...
         if(!this.get(modelCacheKey)){
-            // Register the actual model...
+            // Register the actual model, and its factory...
+            factory._registerFactory(modelName);
             factory._registerDependency('model', modelName);
             modelClass = store.modelFor(modelName);
 
@@ -139,6 +165,12 @@ var ModelFactory = Em.Object.extend({
 
 modelFactory = ModelFactory.create();
 export default {
+    configure: function(options){
+        options = options || {};
+        modelFactory.setProperties({
+            modulePrefix: options.modulePrefix
+        });
+    },
     setResolver: function(resolver){
         modelFactory.set('resolver', resolver);
     },
@@ -150,6 +182,10 @@ export default {
     teardown: function(){
         modelFactory.teardown();
     },
+    define: function(modelName, templateMap){
+        templateMap = templateMap || {};
+        modelFactory.defineTemplateMap(modelName, templateMap);
+    },
     // context & store are unavailable during very first test, because the global 'beforeEach' loop is run prior to
     // the app being setup.  To get around this, calling setup once more when createRecord is called to make sure
     // that the model factory is completely setup.
@@ -157,8 +193,8 @@ export default {
         this.setup();
         return modelFactory.createRecord(modelName, params);
     },
-    createRecords: function(modelName, paramsList){
+    createRecordList: function(modelName, count, params){
         this.setup();
-        return modelFactory.createRecords(modelName, paramsList);
+        return modelFactory.createRecordList(modelName, params);
     }
 };

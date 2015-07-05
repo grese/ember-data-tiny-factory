@@ -18,8 +18,10 @@ module.exports = {
     afterInstall: function(options){
         var locals = this.locals(options),
             framework = locals.testFramework,
-            moduleImportsJS = "import ModelFactory from 'ember-data-tiny-model-factory';" + EOL,
-            setupTeardownJS = "ModelFactory.setResolver(resolver);" + EOL,
+            moduleImportsJS = "import ModelFactory from 'ember-data-tiny-factory';" + EOL,
+            setupTeardownJS =
+                "ModelFactory.configure('" + locals.appModulePrefix + "');" + EOL +
+                "ModelFactory.setResolver(resolver);" + EOL,
             resolverSet = 'setResolver(resolver);' + EOL,
             resolverImport = "import resolver from './helpers/resolver';'" + EOL;
 

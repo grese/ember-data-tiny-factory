@@ -8,8 +8,8 @@ if(isPhantom && process.env.COVERAGE_DIR){
     outputFile = process.env.COVERAGE_DIR + '/' + coverageFile;
 }
 var options = {
-    modulePrefix: "ember-data-tiny-model-factory",
-    filter: "//.*ember-data-tiny-model-factory/.*/",
+    modulePrefix: "ember-data-tiny-factory",
+    filter: "//.*ember-data-tiny-factory/.*/",
     antifilter: "//.*(tests|template).*/",
     loaderExclusions: [],
     enableCoverage: true,

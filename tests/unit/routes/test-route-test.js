@@ -1,7 +1,7 @@
 /* jshint expr:true */
 import { expect } from 'chai';
 import { describeModule, it } from 'ember-mocha';
-import ModelFactory from 'ember-data-tiny-model-factory';
+import ModelFactory from 'ember-data-tiny-factory';
 
 describeModule('route:test-route', 'TestRouteRoute', {}, function() {
 
