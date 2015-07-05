@@ -4,6 +4,6 @@ import { setResolver } from 'ember-mocha';
 
 setResolver(resolver);
 factorySetup({
-    modulePrefix: 'ember-data-tiny-factory',
+    modulePrefix: 'dummy',
     resolver: resolver
 });
