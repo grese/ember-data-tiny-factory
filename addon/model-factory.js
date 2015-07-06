@@ -35,6 +35,7 @@ var ModelFactory = Em.Object.extend({
         typeParam = typeParam || 'index';
         var factory = this,
             store = this.get('store'),
+            record = null,
             modelTemplate, recordTemplate;
         factory._registerModel(modelName);
         if(typeof typeParam === 'string'){
@@ -54,7 +55,10 @@ var ModelFactory = Em.Object.extend({
                 recordTemplate.id = this._makeRecordId(modelName);
             }
         }
-        return store.push(modelName, recordTemplate);
+        Em.run(function(){
+            record = store.push(modelName, recordTemplate);
+        });
+        return record;
     },
     createRecordList: function(modelName, count, typeParams){
         typeParams = typeParams || 'index';
