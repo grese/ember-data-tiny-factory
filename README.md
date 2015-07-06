@@ -84,6 +84,7 @@ needs to map to the name of the model it represents.  *(For instance, a 'post' m
 * ***Creating a record, or a list of records***
   * createRecord:
     ```javascript
+
     ModelFactory.createRecord(
         "MODEL_NAME",
         ("TEMPLATE_NAME" | {CUSTOM_OBJECT}),
@@ -92,6 +93,7 @@ needs to map to the name of the model it represents.  *(For instance, a 'post' m
     ```
   * createRecordList:
     ```javascript
+
     ModelFactory.createRecordList(
         "MODEL_NAME",
         COUNT,
