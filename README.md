@@ -1,5 +1,5 @@
-# Ember Data Tiny Factory - (EmberCLI Addon)
-[![Build Status](https://travis-ci.org/grese/ember-data-tiny-factory.svg)](https://travis-ci.org/grese/ember-data-tiny-factory)
+# Ember Data Tiny Factory - (EmberCLI Addon) [![Build Status](https://travis-ci.org/grese/ember-data-tiny-factory.svg)](https://travis-ci.org/grese/ember-data-tiny-factory)
+
 This is an EmberCLI addon that allows you to create mock Ember Data models for use in your unit tests.
 * Works with [Mocha](http://mochajs.org/) and [QUnit](https://qunitjs.com/).
 * Automatic setup/teardown of ModelFactory before/after each test...
