@@ -165,12 +165,15 @@ needs to map to the name of the model it represents.  *(For instance, a 'post' m
 * `git clone git@github.com:grese/ember-data-tiny-factory.git`
 * `npm install`
 * `bower install`
+
 #### Running
 * `ember server`
 * Visit your app at http://localhost:4200.
+
 #### Running Tests
 * `ember test`
 * `ember test --server`
+
 #### Building
 * `ember build`
 For more information on using ember-cli, visit [http://www.ember-cli.com/](http://www.ember-cli.com/).
