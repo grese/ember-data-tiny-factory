@@ -2,7 +2,7 @@
 This is an EmberCLI addon that allows you to create mock Ember Data models for use in your unit tests.
 * Works with [Mocha](http://mochajs.org/) and [QUnit](https://qunitjs.com/).
 * Automatic setup/teardown of ModelFactory before/after each test...
-* Automatic lookup of transitive dependencies (DS.Transforms and DS.Model) in your models. (You do NOT need to add them in the 'needs' relationship for your tests).
+* Automatic lookup of transitive dependencies (DS.Transforms and DS.Model) in your models. ***(You do NOT need to register models that you use with ModelFactory in your test's 'needs' relationship)***
 * Supports both template based record creation, and ad-hoc definition of id or properties for a record.
 * Allows generation of factory templates using `ember g factory [MODEL_NAME]`
 
