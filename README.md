@@ -129,19 +129,19 @@ needs to map to the name of the model it represents.  *(For instance, a 'post' m
     import ModelFactory from 'ember-data-tiny-factory';
     // ...
 
+    // Create a custom post...
+    var customPost = ModelFactory.createRecord('post', {
+        id: '10',
+        title: 'I am a custom post',
+        date: '2015-07-04'
+    });
+
     // Create 3 custom comments (no template)...
     var customComments = ModelFactory.createRecordList('comment', 3, [
         {id: '1', comment: 'splendid!'},
         {id: '2', comment: 'splendid!'},
         {comment: 'fantastic!'}, // (will have auto-generated ID)
     ]);
-
-    // A custom post...
-    var customPost = ModelFactory.createRecord('post', {
-        id: '10',
-        title: 'I am a custom post',
-        date: '2015-07-04'
-    });
     customPost.set('comments', customComments);
 
     // Create a mixed list of templated comments, and custom comments...
@@ -152,7 +152,12 @@ needs to map to the name of the model it represents.  *(For instance, a 'post' m
         'index',
         {id: '3', comment: 'wonderful!!'}
     ]);
-    // ...
+
+    // Create custom post with auto-generated ID:
+    var customPostAutoId = ModelFactory.createRecord('post', {
+        title: 'I will have an auto-generated id',
+        date: '2015-07-04'
+    });
     ```
 
 ## Collaboration
