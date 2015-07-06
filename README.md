@@ -1,4 +1,4 @@
-# Ember Data Tiny Factory - (for EmberCLI)
+# Ember Data Tiny Factory - (EmberCLI Addon)
 This is an EmberCLI addon that allows you to create mock Ember Data models for use in your unit tests.
 * Works with [Mocha](http://mochajs.org/) and [QUnit](https://qunitjs.com/).
 * Automatic setup/teardown of ModelFactory before/after each test...
