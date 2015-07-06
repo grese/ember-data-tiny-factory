@@ -21,9 +21,9 @@ This is an EmberCLI addon that allows you to create mock Ember Data models for u
         resolver: resolver
     });
     ```
-  * If you do not see these lines, just add them (with the correct import statement for your test framework)
-    * QUnit: `import { factorySetup } from 'ember-data-tiny-factory/setup/qunit';`
+  * If you do not see these lines, just add them *(with the correct import statement for your test framework)*.
     * Mocha: `import { factorySetup } from 'ember-data-tiny-factory/setup/mocha';`
+    * QUnit: `import { factorySetup } from 'ember-data-tiny-factory/setup/qunit';`
 
 ## Usage
 #### Factories
@@ -41,8 +41,7 @@ needs to map to the name of the model it represents.  *(For instance, a 'post' m
     ```
 
 * Defining 'templates' in the factory
-  * 'index' template will be used by default if none specified.
-  * For the most part, it is recommended that you do NOT specify the 'id' property in your templates.  You do actually have the ability to specify the 'id' in your templates, but be mindful that you will not be able to create lists of records from that template if it has an 'id' hard-coded because each EmberData record must have a unique 'id'.
+  * 'index' template will be used by default.
   * Some sample templates...
     ```javascript
     // in tests/factories/post.js ...
@@ -80,6 +79,7 @@ needs to map to the name of the model it represents.  *(For instance, a 'post' m
         }
     });
     ```
+  * For the most part, it is recommended that you do NOT specify the 'id' property in your templates.  You do actually have the ability to specify the 'id' in your templates, but be mindful that you will not be able to create lists of records from that template if it has an 'id' hard-coded because each EmberData record must have a unique 'id'.
 
 * Creating Records
   * Create record(s) from a template:
