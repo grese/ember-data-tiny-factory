@@ -4,10 +4,10 @@ import DS from 'ember-data';
 import { getContext } from 'ember-test-helpers';
 
 var modelFactory,
-    numCreated = 0,
     nativeTypes = Em.A(['string', 'boolean', 'number']);
 
 var ModelFactory = Em.Object.extend({
+    numCreated: 0,
     ctx: null,
     store: null,
     resolver: null,
@@ -168,9 +168,8 @@ var ModelFactory = Em.Object.extend({
         }
     },
     _makeRecordId: function(modelName){
-        ++numCreated;
-        var now = Date.now();
-        return modelName + numCreated + '-' + now;
+        this.incrementProperty('numCreated');
+        return modelName + this.get('numCreated') + '-' + Date.now();
     },
     _isSetup: Em.computed('ctx', 'store', function(){
         return this.get('ctx') && this.get('store');
