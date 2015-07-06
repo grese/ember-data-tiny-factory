@@ -60,8 +60,9 @@ var ModelFactory = Em.Object.extend({
         });
         return record;
     },
-    createRecordList: function(modelName, count, typeParams){
+    createRecordList: function(modelName, count, typeParams, customIds){
         typeParams = typeParams || 'index';
+        customIds = customIds || [];
         var i = 0, records = Em.A();
         if(typeof typeParams === 'string'){
             // If typeParams is a string, just create a list of records with same template...
@@ -71,7 +72,7 @@ var ModelFactory = Em.Object.extend({
         }else{
             // If typeParams is NOT a string, assume it is an array and create each record with specified type...
             for(i = 0; i < count; i++){
-                records.addObject(this.createRecord(modelName, typeParams[i]));
+                records.addObject(this.createRecord(modelName, typeParams[i], customIds[i]));
             }
         }
         return records;
@@ -209,8 +210,8 @@ export default {
         this.setup();
         return modelFactory.createRecord(modelName, typeParam, customId);
     },
-    createRecordList: function(modelName, count, typeParams){
+    createRecordList: function(modelName, count, typeParams, customIds){
         this.setup();
-        return modelFactory.createRecordList(modelName, count, typeParams);
+        return modelFactory.createRecordList(modelName, count, typeParams, customIds);
     }
 };
