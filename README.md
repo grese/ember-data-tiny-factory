@@ -8,7 +8,8 @@ This is an EmberCLI addon that allows you to create mock Ember Data models for u
 
 ## Installation
 * Install: `ember install git+ssh://git@github.com:grese/ember-data-tiny-factory.git`
-* Setup: `ember g ember-data-tiny-factory ember-data-tiny-factory`
+  * If you see this error: *"The `ember generate` command requires an entity name to be specified. For more details, use `ember help`."*, run the following setup command:
+  * Setup: `ember g ember-data-tiny-factory ember-data-tiny-factory` (skip if you did not see the error above)
 * After setup, have a look in your *tests/test-helper.js* file:
   * You should see that the following lines of code have been automaticaly added to the file *(if QUnit, the import statement will say 'ember-data-tiny-factory/setup/qunit')*.
     ```javascript
