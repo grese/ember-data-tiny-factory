@@ -4,6 +4,7 @@ import DS from 'ember-data';
 import { getContext } from 'ember-test-helpers';
 
 var modelFactory,
+    numCreated = 0,
     nativeTypes = Em.A(['string', 'boolean', 'number']);
 
 var ModelFactory = Em.Object.extend({
@@ -30,36 +31,44 @@ var ModelFactory = Em.Object.extend({
     defineTemplateMap: function(factoryName, templates){
         this.set('_templates.' + factoryName, templates);
     },
-    createRecord: function(modelName, params){
-        params = params || 'default';
+    createRecord: function(modelName, typeParam, customRecordId){
+        typeParam = typeParam || 'index';
         var factory = this,
             store = this.get('store'),
-            record = null,
-            modelTemplate;
-        if(store){
-            if(typeof params === 'string'){
-                modelTemplate = this._lookupTemplate(modelName, params);
-            }else{
-                modelTemplate = params;
-            }
-            factory._registerModel(modelName);
-            Em.run(function(){
-                record = store.createRecord(modelName, modelTemplate);
-            });
+            modelTemplate, recordTemplate;
+        factory._registerModel(modelName);
+        if(typeof typeParam === 'string'){
+            // If typeParam is a string, try to look up the template.
+            modelTemplate = this._lookupTemplate(modelName, typeParam);
+        }else{
+            // if typeParam is not a string, assume it is a custom object and create model.
+            modelTemplate = typeParam;
         }
-        return record;
-    },
-    createRecordList: function(modelName, count, params){
-        var i, records = Em.A([]), templateKey, modelTemplate;
-        for(i = 0; i < count; i++){
-            if(typeof params === 'string'){
-                templateKey = params;
-            }else{
-                templateKey = params[i];
+
+        // copy the template so we do not modify the original...
+        recordTemplate = Em.$.extend({}, modelTemplate);
+        if(customRecordId !== undefined){
+            recordTemplate.id = customRecordId;
+        }else{
+            if(recordTemplate.id === undefined){
+                recordTemplate.id = this._makeRecordId(modelName);
             }
-            modelTemplate = this._lookupTemplate(modelName, templateKey);
-            modelTemplate.id = i;
-            records.addObject(this.createRecord(modelName, modelTemplate));
+        }
+        return store.push(modelName, recordTemplate);
+    },
+    createRecordList: function(modelName, count, typeParams){
+        typeParams = typeParams || 'index';
+        var i = 0, records = Em.A();
+        if(typeof typeParams === 'string'){
+            // If typeParams is a string, just create a list of records with same template...
+            for(i = 0; i < count; i++){
+                records.addObject(this.createRecord(modelName, typeParams));
+            }
+        }else{
+            // If typeParams is NOT a string, assume it is an array and create each record with specified type...
+            for(i = 0; i < count; i++){
+                records.addObject(this.createRecord(modelName, typeParams[i]));
+            }
         }
         return records;
     },
@@ -76,7 +85,7 @@ var ModelFactory = Em.Object.extend({
         }
     },
     _lookupTemplate: function(modelName, templateKey){
-        templateKey = templateKey || 'default';
+        templateKey = templateKey || 'index';
         return this.get('_templates.' + modelName + '.' + templateKey) || {};
     },
     _templates: {},
@@ -158,6 +167,11 @@ var ModelFactory = Em.Object.extend({
             this.set(modelCacheKey, modelClass);
         }
     },
+    _makeRecordId: function(modelName){
+        ++numCreated;
+        var now = Date.now();
+        return modelName + numCreated + '-' + now;
+    },
     _isSetup: Em.computed('ctx', 'store', function(){
         return this.get('ctx') && this.get('store');
     })
@@ -184,15 +198,16 @@ export default {
         templateMap = templateMap || {};
         modelFactory.defineTemplateMap(modelName, templateMap);
     },
-    // context & store are unavailable during very first test, because the global 'beforeEach' loop is run prior to
+
+    // context & store are unavailable during very first test, due to the the global 'beforeEach' loop is run prior to
     // the app being setup.  To get around this, calling setup once more when createRecord is called to make sure
     // that the model factory is completely setup.
-    createRecord: function(modelName, params){
+    createRecord: function(modelName, typeParam, customId){
         this.setup();
-        return modelFactory.createRecord(modelName, params);
+        return modelFactory.createRecord(modelName, typeParam, customId);
     },
-    createRecordList: function(modelName, count, params){
+    createRecordList: function(modelName, count, typeParams){
         this.setup();
-        return modelFactory.createRecordList(modelName, params);
+        return modelFactory.createRecordList(modelName, count, typeParams);
     }
 };

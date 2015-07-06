@@ -11,7 +11,7 @@ var options = {
     modulePrefix: "ember-data-tiny-factory",
     filter: "//.*ember-data-tiny-factory/.*/",
     antifilter: "//.*(tests|template).*/",
-    loaderExclusions: [],
+    loaderExclusions: ['ember-data-tiny-factory/setup/qunit'],
     enableCoverage: true,
     cliOptions: {
         reporters: ['lcov'],

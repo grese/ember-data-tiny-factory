@@ -23,7 +23,8 @@
     "currentPath",
     "currentRouteName",
     "sinon",
-    "process"
+    "process",
+     "xit"
   ],
   "node": false,
   "browser": false,

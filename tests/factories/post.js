@@ -1,9 +1,8 @@
 import ModelFactory from 'ember-data-tiny-factory';
 
 ModelFactory.define('post', {
-    default: {
-        id: 0,
-        title: 'This is the default post',
+    index: {
+        title: 'This is the index post',
         date: 13423,
         published: false,
         metadata: {
@@ -11,7 +10,6 @@ ModelFactory.define('post', {
         }
     },
     special: {
-        id: 1,
         title: 'This is a very special post',
         date: 42345,
         published: true,
