@@ -15,6 +15,7 @@ This is an EmberCLI addon that allows you to create mock Ember Data models for u
     ```javascript
     // ...
     import { factorySetup } from 'ember-data-tiny-factory/setup/mocha';
+
     // ...
     factorySetup({
         modulePrefix: '[YOUR_APP_NAME]',
@@ -108,8 +109,12 @@ needs to map to the name of the model it represents.  For instance, a 'post' mod
     // ...
     // Create a 'post' with 'index' template, and 'id' of '12345'.
     var post = ModelFactory.createRecord('post', 'index', '12345');
+
     // Create a 'post' with 'index' template, and 'id' of '23456'.
     var post2 = ModelFactory.createRecord('post', null, '23456');
+
+    // Create a list of 'comments' with 'index' template, and specific 'id's.
+    var comments = ModelFactory.createRecord('comment', 3, null, ['1', '2', '3']);
     // ...
   ```
   * Create ad-hoc record(s) with custom properties
@@ -117,18 +122,27 @@ needs to map to the name of the model it represents.  For instance, a 'post' mod
       // ...
       import ModelFactory from 'ember-data-tiny-factory';
       // ...
-      // Create 4 'comment' records... Some from templates, and others with custom properties...
+      // Create 2 comments
       var customComments = ModelFactory.createRecordList('comment', 3, [
-          'index', // A comment from 'index' template...
-          {id: '1', comment: 'splendid!'}, // Custom record...
-          {comment: 'fantastic!'}, // Custom record with auto-generated id...
+          {id: '1', comment: 'splendid!'},
+          {id: '2', comment: 'splendid!'},
+          {comment: 'fantastic!'}, // (will have auto-generated ID)
       ]);
+
       var customPost = ModelFactory.createRecord('post', {
           id: '10',
           title: 'I am a custom post',
           date: '2015-07-04'
       });
       customPost.set('comments', customComments);
+
+      var mixedComments = ModelFactory.createRecordList('comment', 5, [
+          'empty',
+          'approved',
+          {id: '2', comment: 'splendid!'},
+          'index',
+          {id: '3', comment: 'wonderful!!'}
+      ]);
       // ...
   ```
 
