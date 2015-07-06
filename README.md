@@ -87,18 +87,22 @@ needs to map to the name of the model it represents.  *(For instance, a 'post' m
     // ...
     import ModelFactory from 'ember-data-tiny-factory';
     // ...
-    var post = ModelFactory.createRecord('post'); // Creates a 'post' with 'index' template
-    var noDatePost = ModelFactory.createRecord('post', 'noDate'); // Creates a 'post' using 'noDate' template
-    var noTitlePost = ModelFactory.createRecord('post', 'noTitle'); // Creates a 'post' using 'noTitle' template
 
-    var comments = ModelFactory.createRecordList('comment', 3); // Creates a list of 3 'index' comments.
-    // Creates a list of 10 'approved' comments.
+    // Creates a 'post' with 'index' template...
+    var post = ModelFactory.createRecord('post');
+    // Creates a post with 'noDate' template...
+    var noDatePost = ModelFactory.createRecord('post', 'noDate');
+    // Creates a post with 'noTitle' template...
+    var noTitlePost = ModelFactory.createRecord('post', 'noTitle');
+
+    // Creates a list of 3 comments with 'index' template...
+    var comments = ModelFactory.createRecordList('comment', 3);
+    // Creates a list of 10 comments with 'approved' template...
     var approvedComments = ModelFactory.createRecordList('comment', 10, 'approved');
-    // Creates a list of comments: one 'index', one 'approved', one 'empty'.
+    // Creates a list of comments: one 'index', one 'approved', one 'empty'...
     var assortedComments = ModelFactory.createRecordList('comment', 2, ['index', 'approved', 'empty']);
 
     // NOTE: All of the records created in the examples above will have an automatically generated 'id'.
-    // ...
     ```
 
   * Create record(s) from a template with a custom 'id'
@@ -106,6 +110,7 @@ needs to map to the name of the model it represents.  *(For instance, a 'post' m
     // ...
     import ModelFactory from 'ember-data-tiny-factory';
     // ...
+
     // Create a 'post' with 'index' template, and 'id' of '12345'.
     var post = ModelFactory.createRecord('post', 'index', '12345');
 
@@ -114,20 +119,24 @@ needs to map to the name of the model it represents.  *(For instance, a 'post' m
 
     // Create a list of 'comments' with 'index' template, and specific 'id's.
     var comments = ModelFactory.createRecord('comment', 3, null, ['1', '2', '3']);
-    // ...
+
+    // Create a list of 'comments' with 'empty' template, and specific 'id's.
+    var comments2 = ModelFactory.createRecord('comment', 3, 'empty', ['101', '102', '103']);
     ```
   * Create ad-hoc record(s) with custom properties
     ```javascript
     // ...
     import ModelFactory from 'ember-data-tiny-factory';
     // ...
-    // Create 2 comments
+
+    // Create 3 custom comments (no template)...
     var customComments = ModelFactory.createRecordList('comment', 3, [
         {id: '1', comment: 'splendid!'},
         {id: '2', comment: 'splendid!'},
         {comment: 'fantastic!'}, // (will have auto-generated ID)
     ]);
 
+    // A custom post...
     var customPost = ModelFactory.createRecord('post', {
         id: '10',
         title: 'I am a custom post',
@@ -135,6 +144,7 @@ needs to map to the name of the model it represents.  *(For instance, a 'post' m
     });
     customPost.set('comments', customComments);
 
+    // Create a mixed list of templated comments, and custom comments...
     var mixedComments = ModelFactory.createRecordList('comment', 5, [
         'empty',
         'approved',
