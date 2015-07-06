@@ -82,8 +82,8 @@ needs to map to the name of the model it represents.  *(For instance, a 'post' m
   * The ModelFactory will automatically generate IDs for your records if you do not specify one.  For the most part, it is recommended that you do NOT specify the 'id' property in your templates.  You do actually have the ability to specify the 'id' in your templates, but be mindful that you will not be able to create lists of records from that template if it has an 'id' hard-coded because each EmberData record must have a unique 'id'.
 
 * ***Creating a record, or a list of records***
-  * `ModelFactory.createRecord([MODEL_NAME], ([TEMPLATE_NAME] | [CUSTOM_OBJECT]), ([CUSTOM_ID]))`
-  * `ModelFactory.createRecordList([MODEL_NAME], [COUNT], ([TEMPLATE_NAME] | [TEMPLATE_NAMES_ARRAY] | [CUSTOM_OBJECTS_ARRAY] | [MIXED_ARRAY]), ([CUSTOM_IDS_ARRAY]))`
+  * `ModelFactory.createRecord("MODEL_NAME", ("TEMPLATE_NAME" | {CUSTOM_OBJECT}), ("CUSTOM_ID"))`
+  * `ModelFactory.createRecordList("MODEL_NAME", COUNT, ("TEMPLATE_NAME" | [TEMPLATE_NAMES_ARRAY] | [CUSTOM_OBJECTS_ARRAY] | [MIXED_ARRAY]), ([CUSTOM_IDS_ARRAY]))`
   * Create record(s) from a template:
     ```javascript
     // ...
