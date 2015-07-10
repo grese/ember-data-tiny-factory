@@ -13,6 +13,9 @@ Post.reopen({
     publish: function(){
         this.set('published', true);
     },
+    unpublish: function(){
+        this.set('published', false);
+    },
     isPublished: Em.computed('published', function(){
         return !!this.get('published');
     })

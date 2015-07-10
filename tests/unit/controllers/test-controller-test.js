@@ -14,9 +14,6 @@ describeModule('controller:test-controller', 'TestControllerController', {}, fun
         // Creating 'index' post, and comments...
         var theComments = ModelFactory.createRecordList('comment', 5);
         thePost = ModelFactory.createRecord('post');
-        console.log('published before: ', thePost.get('isPublished'));
-        thePost.publish();
-        console.log('published after: ', thePost.get('isPublished'));
         thePost.get('comments').pushObjects(theComments);
     });
 
@@ -115,5 +112,16 @@ describeModule('controller:test-controller', 'TestControllerController', {}, fun
         expect(post.get('date')).to.eq(13423);
         expect(post.get('published')).to.eq(false);
         expect(post.get('metadata.hasPhoto')).to.eq(false);
+    });
+
+    it('should also have methods & properties that were added to a DS.Model using .reopen or .reopenClass', function(){
+        this.subject();
+        var post = ModelFactory.createRecord('post', {published: false});
+        expect(post.publish).to.be.an.instanceof(Function);
+        expect(post.unpublish).to.be.an.instanceof(Function);
+        post.publish();
+        expect(post.get('isPublished')).to.eq(true);
+        post.unpublish();
+        expect(post.get('isPublished')).to.eq(false);
     });
 });
