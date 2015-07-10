@@ -1,10 +1,9 @@
-/* global require */
+/* global require, requirejs */
 import Em from 'ember';
 import DS from 'ember-data';
 import { getContext } from 'ember-test-helpers';
 
-var modelFactory,
-    nativeTypes = Em.A(['string', 'boolean', 'number']);
+var modelFactory;
 
 var ModelFactory = Em.Object.extend({
     numCreated: 0,
@@ -18,6 +17,9 @@ var ModelFactory = Em.Object.extend({
     setup: function(){
         this._initCtx();
         this._initStore();
+        if(this.get('_isSetup')){
+            this._registerModelsAndTransforms();
+        }
     },
     teardown: function(){
         var factory = this;
@@ -33,11 +35,9 @@ var ModelFactory = Em.Object.extend({
     },
     createRecord: function(modelName, typeParam, customRecordId){
         typeParam = typeParam || 'index';
-        var factory = this,
-            store = this.get('store'),
+        var store = this.get('store'),
             record = null,
             modelTemplate, recordTemplate;
-        factory._registerModel(modelName);
         if(typeof typeParam === 'string'){
             // If typeParam is a string, try to look up the template.
             modelTemplate = this._lookupTemplate(modelName, typeParam);
@@ -114,10 +114,17 @@ var ModelFactory = Em.Object.extend({
     _registerFactory: function(factoryName){
         // Requires the factory if it does not already exist so it calls define(factoryName)...
         if(!this.get('_templates.' + factoryName)){
-            require(this.get('modulePrefix') + '/tests/factories/' + factoryName);
+            try{
+                require(this.get('modulePrefix') + '/tests/factories/' + factoryName);
+            }catch(e){
+                console.warn('Could not find factory for ' + factoryName);
+            }
         }
     },
     _registerDependency: function(type, name){
+        if(type === 'model'){
+            this._registerFactory(name);
+        }
         // Registers a dependency for the test (DS.Transform or DS.Model)...
         var moduleName = type + ':' + name,
             resolver = this.get('resolver'),
@@ -130,46 +137,19 @@ var ModelFactory = Em.Object.extend({
         }
         return module;
     },
-    _registerModel: function(modelName){
-        // *** "model:modelName" of the parent model must already be specified on the 'needs' relationship for the test.
-        var factory = this,
-            store = this.get('store'),
-            modelCacheKey = '_modules.model:' + modelName,
-            modelClass;
-
-        // If model class is not cached, register it...
-        if(!this.get(modelCacheKey)){
-            // Register the actual model, and its factory...
-            factory._registerFactory(modelName);
-            factory._registerDependency('model', modelName);
-            modelClass = store.modelFor(modelName);
-
-            // Loop through each relationship of the provided model class (belongsTo, hasMany), register the dependent
-            // model class, and if the sub-model was found, call _registerModel recursively to register sub-models...
-            modelClass.eachRelationship(function(attrName, descriptor){
-                var moduleName = (descriptor.type.modelName || descriptor.type.typeKey),
-                    cacheKey = '_modules.' + moduleName,
-                    module;
-                if(!factory.get(cacheKey)){
-                    module = factory._registerDependency('model', moduleName);
-                    factory._registerModel(moduleName);
-                    factory.set(cacheKey, module);
+    _registerModelsAndTransforms: function(){
+        var entries = requirejs.entries,
+            modelPrefix = this.get('modulePrefix') + '/models/',
+            transformPrefix = this.get('modulePrefix') + '/transforms/',
+            entry;
+        for(entry in entries){
+            if(entries.hasOwnProperty(entry)){
+                if(entry.indexOf(modelPrefix) > -1){
+                    this._registerDependency('model', entry.replace(modelPrefix, ''));
+                }else if(entry.indexOf(transformPrefix) > -1){
+                    this._registerDependency('transform', entry.replace(transformPrefix, ''));
                 }
-            });
-
-            // Loop through each transformed attribute of the model class, and register the transform if the data type
-            // is not one of ember-data's native data types.
-            modelClass.eachTransformedAttribute(function(attrName, type){
-                var cacheKey = '_modules.transform:' + type,
-                    module;
-                if(!nativeTypes.contains(type) && !factory.get(cacheKey)){
-                    module = factory._registerDependency('transform', type);
-                    factory.set(cacheKey, module);
-                }
-            });
-
-            // Cache the registered model class...
-            this.set(modelCacheKey, modelClass);
+            }
         }
     },
     _makeRecordId: function(modelName){
