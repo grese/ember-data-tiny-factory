@@ -1,4 +1,4 @@
-/* global require */
+/* global require, requirejs */
 import Em from 'ember';
 import DS from 'ember-data';
 import { getContext } from 'ember-test-helpers';
@@ -18,6 +18,7 @@ var ModelFactory = Em.Object.extend({
     setup: function(){
         this._initCtx();
         this._initStore();
+        this._registerDependencies();
     },
     teardown: function(){
         var factory = this;
@@ -170,6 +171,20 @@ var ModelFactory = Em.Object.extend({
 
             // Cache the registered model class...
             this.set(modelCacheKey, modelClass);
+        }
+    },
+    _registerDependencies: function(){
+        var modules = requriejs.entries || {},
+            modelPrefix = this.get('modulePrefix') + '/models/',
+            transformPrefix = this.get('modulePrefix') + '/transforms/',
+            key;
+        // register models and transforms:
+        for(key in modules){
+            if(key.indexOf(modelPrefix) > -1){
+                this._registerDependency('model', key.replace(modelPrefix, ''));
+            }else if(key.indexOf(transformPrefix) > -1){
+                this._registerDependency('transform', key.replace(transformPrefix, ''));
+            }
         }
     },
     _makeRecordId: function(modelName){
