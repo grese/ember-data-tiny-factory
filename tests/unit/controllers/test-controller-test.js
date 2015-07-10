@@ -14,6 +14,9 @@ describeModule('controller:test-controller', 'TestControllerController', {}, fun
         // Creating 'index' post, and comments...
         var theComments = ModelFactory.createRecordList('comment', 5);
         thePost = ModelFactory.createRecord('post');
+        console.log('published before: ', thePost.get('isPublished'));
+        thePost.publish();
+        console.log('published after: ', thePost.get('isPublished'));
         thePost.get('comments').pushObjects(theComments);
     });
 
