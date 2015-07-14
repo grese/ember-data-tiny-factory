@@ -1,6 +1,6 @@
 {
   "name": "ember-data-tiny-factory",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "An EmberCLI addon for creating mock Ember Data models to use in your unit tests.",
   "directories": {
     "doc": "doc",
