@@ -35,7 +35,8 @@ var ModelFactory = Em.Object.extend({
     },
     createRecord: function(modelName, typeParam, customRecordId){
         typeParam = typeParam || 'index';
-        var store = this.get('store'),
+        var factory = this,
+            store = this.get('store'),
             record = null,
             modelTemplate, recordTemplate;
         if(typeof typeParam === 'string'){
@@ -57,8 +58,13 @@ var ModelFactory = Em.Object.extend({
         }
         Em.run(function(){
             record = store.push(modelName, recordTemplate);
+            factory._overrideModelMethods(record);
         });
         return record;
+    },
+    _overrideModelMethods: function(record){
+        // This method overrides Ember Data methods that will cause errors with mocked records...
+        record.save = function(){ return record; };
     },
     createRecordList: function(modelName, count, typeParams, customIds){
         typeParams = typeParams || 'index';
@@ -81,9 +87,10 @@ var ModelFactory = Em.Object.extend({
         var store = this.get('store'),
             typeKey;
         if(store){
-            // Loop through model types in store, and unload records for each type.
+            // Loop through model types in store, reset dirty states, and unload records for each type.
             for(typeKey in store.typeMaps){
                 if(store.typeMaps.hasOwnProperty(typeKey)){
+                    // unload records by type...
                     store.unloadAll(store.typeMaps[typeKey].type.modelName);
                 }
             }
