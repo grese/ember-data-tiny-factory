@@ -23,7 +23,7 @@ This is an EmberCLI addon that allows you to create mock Ember Data models for u
         resolver: resolver
     });
     ```
-  * If you do not see these lines, just add them *(with the correct import statement for your test framework)*.
+  * If you do not see the lines above, just add them *(with the correct import statement for your test framework)*.
     * Mocha: `import { factorySetup } from 'ember-data-tiny-factory/setup/mocha';`
     * QUnit: `import { factorySetup } from 'ember-data-tiny-factory/setup/qunit';`
 
